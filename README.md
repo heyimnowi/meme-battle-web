@@ -1,4 +1,4 @@
-# Meme Battle Royale
+# meme-battle-web
 Welcome to the Meme Battle Royale, a pet DeFi project for testing Solidity and React! In this simple voting app, you can pick the meme you like the most and see which one wins in the ultimate battle for meme supremacy.
 
 ## 📝 Summary
