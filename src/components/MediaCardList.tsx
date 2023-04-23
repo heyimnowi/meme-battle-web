@@ -45,8 +45,7 @@ const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
     console.log(contract);
     try {
       setLoading(true);
-      const options = await contract.getOptions();
-      console.log(options);
+      const options = await contract.getVotes();
       setOptions(options);
     } catch (message) {
       console.log(message);

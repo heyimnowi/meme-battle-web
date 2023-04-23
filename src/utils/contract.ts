@@ -3,7 +3,7 @@ import VotingContract from "../contracts/Voting.json";
 
 declare let window: any;
 
-export const CONTRACT_ADDRESS = "0x43d770d30C749b6CCA66F4b1f15e980939b6fDFC";
+export const CONTRACT_ADDRESS = "0x50D6AE96E5341c30b7c09f95899B522CE82b35Ee";
 
 export const CONTRACT_ABI = VotingContract.abi;
 
