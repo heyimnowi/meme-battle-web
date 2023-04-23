@@ -7,7 +7,7 @@ This project was created with Create React App and uses Solidity for the voting 
 ## 🚀 Getting Started
 To run the project, you'll need to have Node.js and npm installed. Then, follow these steps:
 
-1. Clone this repository: `git clone https://github.com/yourusername/meme-battle-royale.git`
+1. Clone this repository: `git clone https://github.com/heyimnowi/meme-battle-web.git`
 2. Install the dependencies: `cd meme-battle-royale && npm install`
 3. Start the development server: `npm start`
 4. Open your browser and go to `http://localhost:3000`
