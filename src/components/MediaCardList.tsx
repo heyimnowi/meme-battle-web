@@ -1,4 +1,4 @@
-import { Box} from "@mui/material";
+import { Box, Snackbar } from "@mui/material";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import MediaCard from "./MediaCard";
@@ -23,12 +23,14 @@ interface Option {
 }
 
 interface MediaCardListProps {
-	contract: any;
+  contract: any;
 }
 
 const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
   const [options, setOptions] = useState<Option[]>([]);
-	const { classes } = useStyles();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const { classes } = useStyles();
 
   const getImageFromName = (name: string) => {
     const option = OPTION_IMAGES.find((image) => image.name === name);
@@ -39,37 +41,64 @@ const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
   };
 
   const getOptions = async (contract: any) => {
-    console.log("Getting options...")
-    console.log(contract)
-    const options = await contract.getOptions();
-    console.log(options);
-    setOptions(options);
+    console.log("Getting options...");
+    console.log(contract);
+    try {
+      setLoading(true);
+      const options = await contract.getOptions();
+      console.log(options);
+      setOptions(options);
+    } catch (message) {
+      console.log(message);
+      setMessage("Failed to get options. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  async function vote(optionIndex: number) {
+  const vote = async (optionIndex: number) => {
+    setMessage("Submitting vote...");
     try {
+      setLoading(true);
       const tx = await contract.vote(optionIndex);
       await tx.wait();
       console.log("Vote submitted!");
-    } catch (error) {
-      console.log(error);
+      setMessage("Vote submitted successfully!");
+    } catch (message) {
+      console.log(message);
+      setMessage("Failed to submit vote. Please try again later.");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
-	useEffect(() => {
-		getOptions(contract);
-	}, [contract]);
+  useEffect(() => {
+    getOptions(contract);
+  }, [contract]);
 
-	return (
-	<Box className={classes.box} maxWidth="1200px">
-		{options.map((option, index) => (
-			<MediaCard
-				key={index}
-				image={getImageFromName(option.name)}
-				title={option.name} onVote={() => vote(index)}
-			/>
-		))}
-	</Box>);
+  const handleClose = () => {
+    setMessage(null);
+  };
+
+  return (
+    <Box className={classes.box} maxWidth="1200px">
+      {options.map((option, index) => (
+        <MediaCard
+          key={index}
+          image={getImageFromName(option.name)}
+          title={option.name}
+          onVote={() => vote(index)}
+          disabled={loading}
+        />
+      ))}
+      <Snackbar
+        open={message !== null}
+        message={message ?? ""}
+        autoHideDuration={5000}
+        onClose={handleClose}
+      />
+    </Box>
+  );
 };
 
 export default MediaCardList;

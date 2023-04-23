@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button, CircularProgress } from '@mui/material';
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()((theme) => {
@@ -21,9 +21,10 @@ interface MediaCardProps {
   image: string;
   title: string;
   onVote: () => void;
+  disabled?: boolean;
 }
 
-const MediaCard: React.FC<MediaCardProps> = ({ image, title, onVote }) => {
+const MediaCard: React.FC<MediaCardProps> = ({ image, title, onVote, disabled = false }) => {
   const { classes } = useStyles();
 
   return (
@@ -38,7 +39,7 @@ const MediaCard: React.FC<MediaCardProps> = ({ image, title, onVote }) => {
           {title}
         </Typography>
         <div className={classes.buttonContainer}>
-          <Button variant="contained" color="primary" onClick={onVote}>
+          <Button variant="contained" color="primary" onClick={onVote} disabled={disabled}>
             Vote
           </Button>
         </div>
