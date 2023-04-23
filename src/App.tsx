@@ -5,6 +5,7 @@ import { getContract } from "./utils/contract";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import MediaCardList from "./components/MediaCardList";
 import { theme } from "./styles/theme";
+import { Typography } from "@mui/material";
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -22,6 +23,19 @@ const useStyles = makeStyles()((theme) => {
       flexWrap: "wrap",
       gap: theme.spacing(2),
       marginTop: theme.spacing(2),
+    },
+    title: {
+      fontSize: "2rem",
+      fontWeight: 700,
+      color: "#FFFFFF",
+      marginBottom: theme.spacing(1),
+      textTransform: "uppercase",
+    },
+    subtitle: {
+      fontSize: "1rem",
+      fontWeight: 500,
+      color: "#FFFFFF",
+      marginBottom: theme.spacing(2),
     },
   };
 });
@@ -45,6 +59,10 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.root}>
+        <Typography className={classes.title}>Meme Battle Royale</Typography>
+        <Typography className={classes.subtitle}>
+          Vote your way to meme supremacy in the ultimate showdown!
+        </Typography>
         {currentAccount ? (
           <MediaCardList contract={contract} />
         ) : (
