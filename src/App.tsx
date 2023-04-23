@@ -6,6 +6,8 @@ import ConnectWalletButton from "./components/ConnectWalletButton";
 import MediaCardList from "./components/MediaCardList";
 import { theme } from "./styles/theme";
 import { Typography } from "@mui/material";
+import CountdownTimer from "./components/CountdownTimer";
+import { BigNumber } from "ethers";
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -15,7 +17,7 @@ const useStyles = makeStyles()((theme) => {
       alignItems: "center",
       justifyContent: "center",
       minHeight: "100vh",
-      padding: theme.spacing(4),
+      padding: theme.spacing(0),
     },
     box: {
       display: "flex",
@@ -43,6 +45,7 @@ const useStyles = makeStyles()((theme) => {
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
   const [contract, setContract] = useState<any>();
+  const [expiryDate, setExpiryDate] = useState<number>(0);
   const { classes } = useStyles();
 
   useEffect(() => {
@@ -52,6 +55,8 @@ const App = () => {
         return;
       }
       setContract(contract);
+      const expiryDate = await contract.expiryDate().then((expiryDate: BigNumber) => expiryDate.toNumber());
+      setExpiryDate(expiryDate);
     };
     init();
   }, []);
@@ -63,6 +68,8 @@ const App = () => {
         <Typography className={classes.subtitle}>
           Vote your way to meme supremacy in the ultimate showdown!
         </Typography>
+
+      <CountdownTimer targetDate={expiryDate} />
         {currentAccount ? (
           <MediaCardList contract={contract} />
         ) : (
