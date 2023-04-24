@@ -25,7 +25,7 @@ interface Option {
 }
 
 interface MediaCardListProps {
-  contract: any;
+  contract: Contract;
 }
 
 const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
@@ -71,6 +71,7 @@ const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
         "Vote submitted successfully!",
         AlertSeverity.SUCCESS,
       );
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       showMessage(
         "Failed to submit vote. Please try again later.",

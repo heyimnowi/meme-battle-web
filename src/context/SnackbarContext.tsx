@@ -21,7 +21,9 @@ interface SnackbarContextType {
 
 export const SnackbarContext = createContext<SnackbarContextType>({
   alert: { message: "", severity: AlertSeverity.INFO },
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   showMessage: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   hideMessage: () => {},
 });
 

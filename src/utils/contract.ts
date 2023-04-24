@@ -1,6 +1,7 @@
 import { BigNumber, Contract, ethers } from "ethers";
 import VotingContract from "../contracts/Voting.json";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare let window: any;
 
 export const CONTRACT_ADDRESS = "0x8114eDAd8165131da85d4697369B65Bf3AF1cCf3";

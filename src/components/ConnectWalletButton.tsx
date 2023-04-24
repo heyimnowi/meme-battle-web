@@ -24,6 +24,7 @@ const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
       });
       showMessage("Connected!", AlertSeverity.INFO);
       onSetCurrentAccount(accounts[0]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       const errorMessage = error.message || error;
       showMessage(AlertSeverity.ERROR, errorMessage);

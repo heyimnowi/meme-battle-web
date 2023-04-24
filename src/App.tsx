@@ -44,7 +44,7 @@ const useStyles = makeStyles()((theme) => {
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState("");
-  const [contract, setContract] = useState<any>();
+  const [contract, setContract] = useState<Contract>();
   const [expiryDate, setExpiryDate] = useState<number>(0);
   const { classes } = useStyles();
 
