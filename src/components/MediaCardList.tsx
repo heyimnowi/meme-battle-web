@@ -1,4 +1,4 @@
-import { Box, Snackbar } from "@mui/material";
+import { Alert, Box, Snackbar } from "@mui/material";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import MediaCard from "./MediaCard";
@@ -26,10 +26,20 @@ interface MediaCardListProps {
   contract: any;
 }
 
+enum AlertSeverity {
+  INFO = "info",
+  SUCCESS = "success",
+  WARNING = "warning",
+  ERROR = "error"
+};
+
 const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
   const [options, setOptions] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
+  const [alert, setAlert] = useState<{ severity: AlertSeverity; message: string | null }>({
+    severity: AlertSeverity.INFO,
+    message: null,
+  });
   const { classes } = useStyles();
 
   const getImageFromName = (name: string) => {
@@ -41,31 +51,39 @@ const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
   };
 
   const getOptions = async (contract: any) => {
-    console.log("Getting options...");
-    console.log(contract);
     try {
       setLoading(true);
       const options = await contract.getVotes();
       setOptions(options);
     } catch (message) {
-      console.log(message);
-      setMessage("Failed to get options. Please try again later.");
+      setAlert({
+        severity: AlertSeverity.ERROR,
+        message: "Failed to get options. Please try again later.",
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const vote = async (optionIndex: number) => {
-    setMessage("Submitting vote...");
+    setAlert({
+      severity: AlertSeverity.INFO,
+      message: "Submitting vote..."
+    });
     try {
       setLoading(true);
       const tx = await contract.vote(optionIndex);
       await tx.wait();
-      console.log("Vote submitted!");
-      setMessage("Vote submitted successfully!");
-    } catch (message) {
-      console.log(message);
-      setMessage("Failed to submit vote. Please try again later.");
+      setAlert({
+        severity: AlertSeverity.SUCCESS,
+        message: "Vote submitted successfully!"
+      });
+    } catch (error: any) {
+      const parsedMessage = error.error.message.replace("execution reverted: ", "");
+      setAlert({
+        severity: AlertSeverity.ERROR,
+        message: parsedMessage,
+      });
     } finally {
       setLoading(false);
     }
@@ -76,7 +94,10 @@ const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
   }, [contract]);
 
   const handleClose = () => {
-    setMessage(null);
+    setAlert({
+      severity: AlertSeverity.INFO,
+      message: null,
+    });
   };
 
   return (
@@ -91,11 +112,14 @@ const MediaCardList: React.FC<MediaCardListProps> = ({ contract }) => {
         />
       ))}
       <Snackbar
-        open={message !== null}
-        message={message ?? ""}
+        open={alert.message !== null}
         autoHideDuration={5000}
         onClose={handleClose}
-      />
+      >
+        <Alert severity={alert.severity}>
+          {alert.message ?? ""}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
