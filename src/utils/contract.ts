@@ -1,9 +1,9 @@
-import { ethers } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import VotingContract from "../contracts/Voting.json";
 
 declare let window: any;
 
-export const CONTRACT_ADDRESS = "0x50D6AE96E5341c30b7c09f95899B522CE82b35Ee";
+export const CONTRACT_ADDRESS = "0x8114eDAd8165131da85d4697369B65Bf3AF1cCf3";
 
 export const CONTRACT_ABI = VotingContract.abi;
 
@@ -17,7 +17,7 @@ export const getEthereumObject = () => {
 	return undefined;
 };
 
-export const getContract = async () => {
+export const fetchContract = async () => {
 	const ethereum = getEthereumObject();
 	if (!ethereum) {
 		console.log("Ethereum object not found");
@@ -37,3 +37,11 @@ export const getContract = async () => {
 		return undefined;
 	}
 };
+
+export const fetchExpiryDate = async (contract: Contract) => {
+	return await contract.expiryDate().then((expiryDate: BigNumber) => expiryDate.toNumber());
+};
+
+export const fetchWinner = async (contract: Contract) => {
+	return await contract.getWinningOption().then((winner: string) => winner);
+}

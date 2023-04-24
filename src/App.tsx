@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { ThemeProvider } from "@mui/material/styles";
 import { makeStyles } from "tss-react/mui";
-import { getContract } from "./utils/contract";
+import { fetchContract, fetchExpiryDate } from "./utils/contract";
 import ConnectWalletButton from "./components/ConnectWalletButton";
 import MediaCardList from "./components/MediaCardList";
 import { theme } from "./styles/theme";
 import { Typography } from "@mui/material";
 import CountdownTimer from "./components/CountdownTimer";
-import { BigNumber } from "ethers";
+import { SnackbarProvider } from "./context/SnackbarContext";
 
 const useStyles = makeStyles()((theme) => {
   return {
@@ -50,12 +50,12 @@ const App = () => {
 
   useEffect(() => {
     const init = async () => {
-      const contract = await getContract();
+      const contract = await fetchContract();
       if (!contract) {
         return;
       }
       setContract(contract);
-      const expiryDate = await contract.expiryDate().then((expiryDate: BigNumber) => expiryDate.toNumber());
+      const expiryDate = await fetchExpiryDate(contract);
       setExpiryDate(expiryDate);
     };
     init();
@@ -63,19 +63,21 @@ const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className={classes.root}>
-        <Typography className={classes.title}>Meme Battle Royale</Typography>
-        <Typography className={classes.subtitle}>
-          Vote your way to meme supremacy in the ultimate showdown!
-        </Typography>
+      <SnackbarProvider>
+        <div className={classes.root}>
+          <Typography className={classes.title}>Meme Battle Royale</Typography>
+          <Typography className={classes.subtitle}>
+            Vote your way to meme supremacy in the ultimate showdown!
+          </Typography>
 
-      <CountdownTimer targetDate={expiryDate} />
-        {currentAccount ? (
-          <MediaCardList contract={contract} />
-        ) : (
-          <ConnectWalletButton onSetCurrentAccount={setCurrentAccount} />
-        )}
-      </div>
+          <CountdownTimer targetDate={expiryDate} />
+          {currentAccount ? (
+            <MediaCardList contract={contract} />
+          ) : (
+            <ConnectWalletButton onSetCurrentAccount={setCurrentAccount} />
+          )}
+        </div>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };

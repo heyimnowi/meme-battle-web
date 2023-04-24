@@ -1,4 +1,4 @@
-import { Card, CardMedia, CardContent, Typography, Button, CircularProgress } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()((theme) => {
@@ -14,6 +14,12 @@ const useStyles = makeStyles()((theme) => {
       justifyContent: 'center',
       marginTop: theme.spacing(2),
     },
+    winnerText: {
+      textAlign: 'center',
+      marginTop: theme.spacing(2),
+      fontWeight: 'bold',
+      color: theme.palette.primary.main,
+    },
   };
 });
 
@@ -22,9 +28,11 @@ interface MediaCardProps {
   title: string;
   onVote: () => void;
   disabled?: boolean;
+  loading?: boolean;
+  winner?: boolean;
 }
 
-const MediaCard: React.FC<MediaCardProps> = ({ image, title, onVote, disabled = false }) => {
+const MediaCard: React.FC<MediaCardProps> = ({ image, title, onVote, disabled = false, winner = false, loading = false }) => {
   const { classes } = useStyles();
 
   return (
@@ -38,11 +46,18 @@ const MediaCard: React.FC<MediaCardProps> = ({ image, title, onVote, disabled = 
         <Typography gutterBottom variant="subtitle1" component="h4">
           {title}
         </Typography>
-        <div className={classes.buttonContainer}>
-          <Button variant="contained" color="primary" onClick={onVote} disabled={disabled}>
-            Vote
-          </Button>
-        </div>
+        {!disabled && (
+          <div className={classes.buttonContainer}>
+            <Button variant="contained" color="primary" onClick={onVote} disabled={loading}>
+              Vote
+            </Button>
+          </div>
+        )}
+        {winner && (
+          <div>
+            🎉 Winner meme 🎉
+          </div>
+        )}
       </CardContent>
     </Card>
   );
